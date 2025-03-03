@@ -1,0 +1,31 @@
+networks:
+  default:
+    name: mqtt-network
+
+services:
+  mqtt:
+    image: eclipse-mosquitto
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config:rw
+      - ./mosquitto/data:/mosquitto/data:rw
+      - ./mosquitto/log:/mosquitto/log:rw
+    restart: unless-stopped
+
+  consumer:
+    build: .
+    environment:
+      - SUBSCRIBER_DB_PATH=db/consumer.db
+      - SUBSCRIBER_MQTT_HOSTNAME=mqtt
+      - SUBSCRIBER_MQTT_PORT=1883
+    env_file: .env
+    volumes:
+      - ./db:/app/db
+    restart: unless-stopped
+
+volumes:  
+  db:
+  config:
+  data:
+  log:

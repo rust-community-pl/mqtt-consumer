@@ -1,0 +1,47 @@
+on:
+  push:
+    branches:
+    -  main
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+    
+env:
+  FORCE_COLOR: 1
+  PY_COLORS: 1
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  qa:
+    if: ${{ github.actor != 'dependabot[bot]' && !cancelled() }}
+    name: ${{ matrix.version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ['3.13']
+    steps:
+    - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
+    - uses: astral-sh/setup-uv@f94ec6bedd8674c4426838e6b50417d36b6ab231
+      with:
+        enable-cache: true
+    - name: Install
+      id: install
+      run: uv sync --frozen --python ${{matrix.version}}
+    - name: Run tests
+      if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
+      run: uv run --no-sync --frozen --python ${{matrix.version}} pytest -svv
+    - name: Check formatting
+      if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
+      run: uv run --no-sync --frozen --python ${{matrix.version}} ruff format . --check
+    - name: Lint
+      if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
+      run: uv run --no-sync --frozen --python ${{matrix.version}} ruff check .
+    - name: Check type safety
+      if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
+      run: uv run --no-sync --frozen --python ${{matrix.version}} mypy .
