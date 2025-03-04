@@ -147,11 +147,12 @@ async def loop_consume(settings: Settings) -> None:
 async def prune_all_answers(settings: Settings) -> None:
     db = create_db(settings.db_path)
 
-    async with AsyncSession(db) as session:
-        await session.exec(delete(Answer))  # type: ignore[call-overload]
-        await session.commit()
-
-    await db.dispose()
+    try:
+        async with AsyncSession(db) as session:
+            await session.exec(delete(Answer))  # type: ignore[call-overload]
+            await session.commit()
+    finally:
+        await db.dispose()
 
     logfire.info("Pruned all answers")
 
