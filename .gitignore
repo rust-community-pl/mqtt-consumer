@@ -1,3 +1,4 @@
 pwfile
 .env
 *.db
+*.db-journal
