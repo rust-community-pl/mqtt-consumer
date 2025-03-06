@@ -11,6 +11,7 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlmodel import TIMESTAMP, Column, Field, SQLModel, delete, text
 from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlmodel.main import SQLModelConfig  # type: ignore[attr-defined]
 
 from consumer.settings import Settings, create_db, get_mqtt_client
 
@@ -21,6 +22,8 @@ ANSWER_TOPIC = "answer"
 
 class Answer(SQLModel, table=True):
     __tablename__ = "answers"
+
+    model_config = SQLModelConfig(validate_assignment=True)
 
     received_at: Annotated[
         datetime | None,
