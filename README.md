@@ -67,3 +67,6 @@ pytest
 ```bash
 pytest --accept
 ```
+
+---
+©️ 2025 Bartosz Sławecki

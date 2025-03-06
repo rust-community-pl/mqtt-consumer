@@ -1,5 +1,6 @@
 [project]
 name = "mqtt-quiz-consumer"
+authors = [{ email = "bartosz@slawecki.dev", name = "Bartosz Sławecki" }]
 version = "0.1.0"
 description = "MQTT Quiz Consumer"
 readme = "README.md"
