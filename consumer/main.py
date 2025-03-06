@@ -5,7 +5,7 @@ from typing import Annotated, Literal, Self, assert_never
 
 import aiomqtt
 import logfire
-from pydantic import TypeAdapter, ValidationError, field_validator
+from pydantic import AfterValidator, TypeAdapter, ValidationError
 from pydantic_extra_types.mac_address import MacAddress
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncEngine
@@ -36,12 +36,7 @@ class Answer(SQLModel, table=True):
     ]
     device_id: Annotated[MacAddress, Field(primary_key=True)]
     question_id: Annotated[str, Field(primary_key=True)]
-    choice: int
-
-    @field_validator("choice", mode="after")
-    @classmethod
-    def _validate_choice(cls, choice: int) -> Choices:
-        return TypeAdapter(Choices).validate_python(choice)
+    choice: Annotated[int, AfterValidator(TypeAdapter(Choices).validate_python)]
 
     @classmethod
     def from_message(cls, message: str, *, sep: str = "|") -> Self:
