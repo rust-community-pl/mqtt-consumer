@@ -13,7 +13,7 @@ from sqlmodel import TIMESTAMP, Column, Field, SQLModel, delete, text
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel.main import SQLModelConfig  # type: ignore[attr-defined]
 
-from consumer.settings import Settings, create_db, get_mqtt_client
+from consumer.settings import Settings, get_db, get_mqtt_client
 
 type Choices = Literal[0, 1, 2, 3]
 
@@ -131,26 +131,18 @@ async def loop_consume_once(db: AsyncEngine, settings: Settings) -> None:
 
 
 async def loop_consume(settings: Settings) -> None:
-    db = create_db(settings.db_path)
-
-    try:
-        while True:
-            await loop_consume_once(db, settings)
-    except asyncio.CancelledError:
-        return
-    finally:
-        await db.dispose()
+    async with get_db(settings.db_path) as db:
+        try:
+            while True:
+                await loop_consume_once(db, settings)
+        except asyncio.CancelledError:
+            return
 
 
 async def prune_all_answers(settings: Settings) -> None:
-    db = create_db(settings.db_path)
-
-    try:
-        async with AsyncSession(db) as session:
-            await session.exec(delete(Answer))  # type: ignore[call-overload]
-            await session.commit()
-    finally:
-        await db.dispose()
+    async with get_db(settings.db_path) as db, AsyncSession(db) as session:
+        await session.exec(delete(Answer))  # type: ignore[call-overload]
+        await session.commit()
 
     logfire.info("Pruned all answers")
 

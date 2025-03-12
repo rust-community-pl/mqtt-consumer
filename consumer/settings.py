@@ -1,6 +1,7 @@
 import os
+from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, AsyncGenerator
 
 import aiomqtt
 from pydantic import SecretStr
@@ -40,5 +41,10 @@ def get_mqtt_client(mqtt_credentials: MQTTCredentials) -> aiomqtt.Client:
     )
 
 
-def create_db(db_path: Path) -> AsyncEngine:
-    return create_async_engine(f"sqlite+aiosqlite:////{db_path.absolute()}")
+@asynccontextmanager
+async def get_db(db_path: Path) -> AsyncGenerator[AsyncEngine]:
+    db = create_async_engine(f"sqlite+aiosqlite:////{db_path.absolute()}")
+    try:
+        yield db
+    finally:
+        await db.dispose()
