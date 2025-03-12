@@ -157,6 +157,7 @@ def main() -> None:
         nargs="?",
     )
     args = parser.parse_args()
+    logfire.configure(inspect_arguments=False)
 
     match args.command:
         case "consume":
@@ -166,7 +167,6 @@ def main() -> None:
         case _:
             assert_never(args.command)
 
-    logfire.configure(inspect_arguments=False)
     asyncio.run(task)
 
 
