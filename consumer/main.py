@@ -126,7 +126,7 @@ async def loop_consume_once(db: AsyncEngine, settings: Settings) -> None:
                 async for message in client.messages:
                     await consume_answer(message, db, tasks)
     except aiomqtt.MqttError as error:
-        logfire.error("Lost connection to the broker. Please restart the consumer")
+        logfire.exception("Lost connection to the broker. Please restart the consumer")
         raise asyncio.CancelledError from error
 
 
