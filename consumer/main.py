@@ -157,7 +157,10 @@ def main() -> None:
         nargs="?",
     )
     args = parser.parse_args()
-    logfire.configure(inspect_arguments=False)
+    logfire.configure(
+        console=logfire.ConsoleOptions(show_project_link=False),
+        inspect_arguments=False,
+    )
 
     match args.command:
         case "consume":
