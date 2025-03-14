@@ -1,8 +1,9 @@
 import os
 import ssl
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Annotated, AsyncGenerator
+from typing import Annotated
 
 import aiomqtt
 from pydantic import SecretStr
