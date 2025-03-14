@@ -24,7 +24,7 @@ services:
       - ./db:/app/db
     restart: unless-stopped
 
-volumes:  
+volumes:
   db:
   config:
   data:
