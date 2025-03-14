@@ -1,4 +1,5 @@
 import os
+import ssl
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated, AsyncGenerator
@@ -21,6 +22,7 @@ class MQTTCredentials(
     port: int
     username: str
     password: SecretStr
+    use_tls: bool
 
 
 class Settings(
@@ -38,6 +40,7 @@ def get_mqtt_client(mqtt_credentials: MQTTCredentials) -> aiomqtt.Client:
         port=mqtt_credentials.port,
         username=mqtt_credentials.username,
         password=mqtt_credentials.password.get_secret_value(),
+        tls_context=ssl.create_default_context() if mqtt_credentials.use_tls else None,
     )
 
 
