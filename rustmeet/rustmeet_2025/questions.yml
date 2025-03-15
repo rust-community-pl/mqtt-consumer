@@ -1,0 +1,140 @@
+- content: |
+    When did the development of the Rust programming language start?
+  id: "F1"
+  answers:
+    choices:
+      0: "2003"
+      1: "2004"
+      2: "2005"
+      3: "2006"
+    correct: [3, "2006"]  # checked
+
+- content: |
+    What is the latest stable version of Rust?
+  id: "F2"
+  answers:
+    choices:
+      0: "1.84.0"
+      1: "1.84.1"
+      2: "1.85.0"
+      3: "1.85.1"
+    correct: [2, "1.85.0"]  # checked
+
+- content: |
+    What trait is used to perform type conversions by '?' operator?
+  id: "K1"
+  answers:
+    choices:
+      0: "`Into`"
+      1: "`Try`"
+      2: "`From`"
+      3: "`AsRef`"
+    correct: [2, "`From`"]  # checked
+
+- content: |
+    Is polymorphism possible in Rust?
+  id: "K2"
+  answers:
+    choices:
+      0: "No"
+      1: "Yes"
+      2: "Yes, since 2024 edition"
+      3: "No, but was before 1.0"
+    correct: [1, "Yes"]  # checked
+    comment: |
+      Rust implements _bounded parametric polymorphism_.
+
+- content: |
+    Which feature enables dynamic dispatch in Rust?
+  id: "K3"
+  answers:
+    choices:
+      0: "Generics"
+      1: "Trait Bounds"
+      2: "Trait Objects"
+      3: "Marker Traits"
+    correct: [2, "Trait Objects"]  # checked
+
+- content: |
+    Which Trait is not a Marker Trait?
+  id: "K4"
+  answers:
+    choices:
+      0: "`Copy`"
+      1: "`Clone`"
+      2: "`Unpin`"
+      3: "`Sync`"
+    correct: [1, "`Clone`"]  # checked
+
+- content: |
+    Which type has known size at compile time?
+  id: "K5"
+  answers:
+    comment: "`&str` - it's a reference/pointer. Others are Dynamically Sized Types (DST)."
+    choices:
+      0: "`&str`"
+      1: "`str`"
+      2: "`[T]`"
+      3: "`dyn MyTrait`"
+    correct: [0, "`&str`"]  # checked
+
+- content: |
+    ```rust
+    type Slice = [u8];
+    type Array = [u8; 3];
+
+    dbg!(size_of::<&Slice>());
+    dbg!(size_of::<&Array>());
+    ```
+
+    How does the size of references/pointers compare?
+  id: "K6"
+  answers:
+    choices:
+      0: "`Slice`'s is 2x bigger"
+      1: "`Array`'s is 3x bigger"
+      2: "Type `Slice` won't compile"
+      3: "They are equal"
+    correct: [0, "`Slice`'s is 2x bigger"]  # checked
+    comment: |
+      ```rust
+      [src/main.rs:72:5] size_of::<&Slice>() = 16
+      [src/main.rs:73:5] size_of::<&Array>() = 8
+      ```
+
+      `Array`'s size is known at compile time so only an address to the first element is needed (_thin pointer_).
+      `Slice` is dynamically sized (DST) so it needs an address + length (_fat pointer_).
+
+- content: |
+    Does Rust have a tracing garbage collector?
+  id: "K7"
+  answers:
+    choices:
+      0: "Yes, in stable."
+      1: "Yes, in nightly."
+      2: "Had, but dropped it before 1.0."
+      3: "Rust never had a garbage collector."
+    correct: [2, "Had, but dropped it before 1.0."]  # checked
+    comment: |
+      Rust dropped last GC features around 2014: https://www.reddit.com/r/rust/comments/5jkvo0/comment/dbium4b.
+
+- content: |
+    Which expression would be the least useful inside this function?
+
+    ```rust
+    fn do_work(seed: i32) -> ! {
+      // some work
+    }
+    ```
+  id: "K8"
+  answers:
+    choices:
+      0: "`unwrap()`"
+      1: "`loop`"
+      2: "`return`"
+      3: "`panic!`"
+    correct: [2, "`return`"]  # checked
+    comment: |
+      Technically only loop and return are expressions, panic is a macro, and unwrap is a function call ;)
+      Function's return type is ! (_never_), which means that it's expected to never return.
+      It should loop indefinitely or panic but not return control flow to the caller.

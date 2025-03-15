@@ -1,5 +1,4 @@
 from logging.config import fileConfig
-from pathlib import Path
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
@@ -15,8 +14,7 @@ if config.config_file_name is not None:
 target_metadata = SQLModel.metadata
 
 
-def db_url_from_path(path: Path) -> str:
-    return f"sqlite:////{path.absolute()}"
+db_url_from_path = "sqlite:///{!s}".format
 
 
 def run_migrations_offline() -> None:
