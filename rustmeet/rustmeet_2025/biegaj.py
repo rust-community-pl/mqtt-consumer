@@ -74,14 +74,14 @@ async def on_message(
     question, answer = updated
 
     event = {
-        "captured_at": datetime.now().isoformat(),
+        "captured_at": datetime.now().isoformat(),  # noqa: DTZ005
         "caused_by": (question.model_dump(), answer.model_dump()),
         "state": TypeAdapter(Statistics).dump_python(statistics),  # type: ignore[arg-type]
     }
 
     rich.print(event)
 
-    with EVENTS_FILE.open(mode="a") as events_file:
+    with EVENTS_FILE.open(mode="a") as events_file:  # noqa: ASYNC230
         await asyncio.to_thread(
             events_file.write,
             json.dumps(event, indent=2, ensure_ascii=False) + "\n",

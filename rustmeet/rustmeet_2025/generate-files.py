@@ -32,11 +32,18 @@ def question_to_slide(
     lines = [
         f"# Question {question.id}",
         question.content + "\n",
-        "### Answers",
+        f"### Answer{'s' * (not highlight_correct)}",
+        *(
+            [question.answers.comment]
+            if highlight_correct and question.answers.comment
+            else ()
+        ),
     ]
     for choice_id, choice in question.answers.choices.items():
         include = f"`{fancy_options[choice_id]}` ← {choice}"
-        if highlight_correct and question.answers.correct[0] == choice_id:
+        if highlight_correct:
+            if question.answers.correct[0] != choice_id:
+                continue
             include = include.join(("**", "**"))
         lines.append(f"- {include}")
     return "\n".join(lines)

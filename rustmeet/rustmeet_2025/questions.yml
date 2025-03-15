@@ -97,11 +97,6 @@
       3: "They are equal"
     correct: [0, "`Slice`'s is 2x bigger"]  # checked
     comment: |
-      ```rust
-      [src/main.rs:72:5] size_of::<&Slice>() = 16
-      [src/main.rs:73:5] size_of::<&Array>() = 8
-      ```
-
       `Array`'s size is known at compile time so only an address to the first element is needed (_thin pointer_).
       `Slice` is dynamically sized (DST) so it needs an address + length (_fat pointer_).
 
