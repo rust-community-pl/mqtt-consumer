@@ -21,7 +21,7 @@
     correct: [2, "1.85.0"]  # checked
 
 - content: |
-    What trait is used to perform type conversions by '?' operator?
+    What trait is used to perform type conversions by the `?` operator?
   id: "K1"
   answers:
     choices:
@@ -123,7 +123,7 @@
 
     ```rust
     fn do_work(seed: i32) -> ! {
-      // some work
+        // some work
     }
     ```
   id: "K8"

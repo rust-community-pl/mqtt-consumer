@@ -23,7 +23,7 @@ STATISTICS_LOCK = asyncio.Lock()
 
 @pydantic_dataclass
 class DeviceStatistics:
-    questions: Questions = Field(repr=False)
+    questions: Questions = Field(repr=False, exclude=True)
     answers: dict[str, Answer] = Field(default_factory=dict, repr=False)
 
     def add_answer(self, question: Question, answer: Answer) -> None:
@@ -53,7 +53,7 @@ class DeviceStatistics:
     def total_correct_answers(self) -> int:
         return len(dict(self.get_correct_answers()))
 
-    def get_correct_answers(self) -> Generator[tuple[Question, Answer]]:
+    def get_correct_answers(self) -> Generator[tuple[str, Answer]]:
         for question_id, answer in self.answers.items():
             question = self.questions.get(question_id)
             if question is None:
@@ -123,6 +123,6 @@ async def stats_from_db(db: DatabaseEngine, questions: Questions) -> Statistics:
                 "but it points to a question outside of the question context",
                 answer=answer,
             )
-            return None
+            continue
         statistics[answer.device_id].add_answer(question, answer)
     return dict(statistics)

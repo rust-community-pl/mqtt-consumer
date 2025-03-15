@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from functools import partial
 from pathlib import Path
 from textwrap import dedent, shorten
 from typing import TYPE_CHECKING
@@ -23,14 +24,21 @@ fancy_options: dict[Choices, str] = {
 }
 
 
-def question_to_slide(question: Question) -> str:
+def question_to_slide(
+    question: Question,
+    *,
+    highlight_correct: bool = False,
+) -> str:
     lines = [
         f"# Question {question.id}",
         question.content + "\n",
         "### Answers",
     ]
     for choice_id, choice in question.answers.choices.items():
-        lines.append(f"- `{fancy_options[choice_id]}` ← {choice}")
+        include = f"`{fancy_options[choice_id]}` ← {choice}"
+        if highlight_correct and question.answers.correct[0] == choice_id:
+            include = include.join(("**", "**"))
+        lines.append(f"- {include}")
     return "\n".join(lines)
 
 
@@ -47,6 +55,8 @@ def generate_presentation(
         -->
         """),
         *map(question_to_slide, questions),
+        "# Correct answers",
+        *map(partial(question_to_slide, highlight_correct=True), questions),
     ]
     Path(output_file).write_text("\n\n".join(chunks))
 

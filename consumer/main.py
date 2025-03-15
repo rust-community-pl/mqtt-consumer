@@ -1,5 +1,6 @@
 import asyncio
-from collections.abc import Awaitable, Callable
+from collections.abc import Awaitable, Callable, Coroutine
+from typing import Any
 
 import aiomqtt
 import logfire
@@ -9,7 +10,7 @@ from consumer.settings import Settings, get_db, get_mqtt_client
 from consumer.utils import get_message_payload
 
 type DatabaseEngine = AsyncEngine
-type Callback = Callable[[aiomqtt.Message, AsyncEngine], Awaitable[object]]
+type Callback = Callable[[aiomqtt.Message, AsyncEngine], Coroutine[Any, Any, Any]]
 
 
 async def consume_message(

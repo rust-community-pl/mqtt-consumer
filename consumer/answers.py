@@ -3,13 +3,13 @@ from datetime import datetime
 from typing import Annotated, Literal, NewType, Self
 
 import logfire
-import typer  # type: ignore[attr-defined]
+import typer
 from pydantic import AfterValidator, BeforeValidator, TypeAdapter, ValidationError
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlmodel import TIMESTAMP, Column, Field, SQLModel, delete, text
 from sqlmodel.ext.asyncio.session import AsyncSession
-from sqlmodel.main import SQLModelConfig
+from sqlmodel.main import SQLModelConfig  # type: ignore[attr-defined]
 
 from consumer.settings import Settings, get_db
 
@@ -30,6 +30,7 @@ class Answer(SQLModel, table=True):
         Field(
             default=None,
             repr=False,
+            exclude=True,
             sa_column=Column(
                 TIMESTAMP(timezone=True),
                 nullable=False,
@@ -97,7 +98,7 @@ async def save_answer(answer: Answer, db: AsyncEngine) -> bool:
 
 async def prune_all_answers(*, settings: Settings) -> DeletedTotal:
     async with get_db(settings.db_path) as db, AsyncSession(db) as session:
-        result = await session.exec(delete(Answer).returning(Answer))
+        result = await session.exec(delete(Answer).returning(Answer))  # type: ignore[call-overload]
         total = len(result.fetchall())
         await session.commit()
     return DeletedTotal(total)

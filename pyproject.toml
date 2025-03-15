@@ -20,7 +20,12 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["mypy>=1.13.0", "pyright>=1.1.392.post0", "ruff>=0.8.6"]
+dev = [
+    "mypy>=1.13.0",
+    "pyright>=1.1.392.post0",
+    "ruff>=0.8.6",
+    "types-pyyaml>=6.0.12.20241230",
+]
 test = [
     "pytest>=8.3.4",
     "pytest-accept>=0.1.12",
