@@ -27,7 +27,7 @@ jobs:
         version: ['3.13']
     steps:
     - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
-    - uses: astral-sh/setup-uv@f94ec6bedd8674c4426838e6b50417d36b6ab231
+    - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182
       with:
         enable-cache: true
     - name: Install
